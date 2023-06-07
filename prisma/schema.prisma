@@ -1,0 +1,32 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "sqlitecloud://admin:vxATGDytE2@ce7amnvtp.sqlite.cloud:8860/meu-curriculo"
+}
+
+model Audio {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  caminho   String
+  tipo      String
+  tamanho   Int
+  duracao   Int
+  createdAt DateTime @default(now())
+}
+
+model Imagem {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  caminho   String
+  tipo      String
+  tamanho   Int
+  largura   Int
+  altura    Int
+  createdAt DateTime @default(now())
+}
