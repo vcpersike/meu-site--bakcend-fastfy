@@ -61,7 +61,7 @@ async function atualizarUsuario(request: FastifyRequest, reply: FastifyReply) {
   }
 }
 
-async function listarUsuarios(request: FastifyRequest, reply: FastifyReply) {
+async function listarUsuarios(_: FastifyRequest, reply: FastifyReply) {
   try {
     const usuariosSnapshot = await db.collection('usuarios').get();
     const usuarios: Usuario[] = [];

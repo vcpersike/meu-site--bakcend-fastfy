@@ -1,10 +1,16 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyPluginCallback } from 'fastify';
 import imagensController from '../controllers/imagensController';
+import fp from 'fastify-plugin';
 
-export default function imagensRoutes(fastify: FastifyInstance, _: any) {
+const imagensRoutes: FastifyPluginCallback = (fastify, _, done) => {
     fastify.post('/imagens', imagensController.criarImagem);
     fastify.get('/imagens/:id', imagensController.obterImagem);
     fastify.get('/imagens', imagensController.listarImagens);
     fastify.put('/imagens/:id', imagensController.atualizarImagem);
     fastify.delete('/imagens/:id', imagensController.excluirImagem);
+    done()
 }
+
+export default fp(imagensRoutes, { name: 'imagensRoutes' });
+
+

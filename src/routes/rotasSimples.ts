@@ -1,8 +1,10 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyPluginCallback } from 'fastify';
+import fp from 'fastify-plugin';
 import buscaUsuarioGitController from '../controllers//buscaUsuarioGitController';
 
-export default function simplesRoutes(app: FastifyInstance, opts: any, done: () => void) {
-    app.get('/usuarios/:username', buscaUsuarioGitController.buscarUsuario);
-
+const simplesRoutes: FastifyPluginCallback = (fastify, _, done) => {
+    fastify.get('/usuarios/:username', buscaUsuarioGitController.buscarUsuario)
     done();
 }
+export default fp(simplesRoutes, { name: 'simplesRoutes' });
+

@@ -1,5 +1,5 @@
 import fastify, { FastifyInstance } from 'fastify';
-import cors from 'fastify-cors';
+import cors from '@fastify/cors';
 import usuariosRoutes from './routes/usuarios';
 import uploadAudioroutes from './routes/uploudAudio';
 import imagensRoutes from './routes/imagens';
@@ -19,7 +19,9 @@ app.register(uploadAudioroutes);
 app.register(imagensRoutes);
 app.register(simplesRoutes);
 
-app.listen(6001, (err: Error | null, address: string) => {
+app.listen({
+  port: 6001,
+}, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);
