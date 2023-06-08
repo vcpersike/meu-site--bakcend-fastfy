@@ -5,6 +5,7 @@ import firebase from '../services/firebase';
 // Obtendo a instância do Firestore
 const db = firebase.firestore();
 
+
 // Função para buscar um usuário no GitHub
 async function buscarUsuario(request: FastifyRequest, reply: FastifyReply) {
     try {
