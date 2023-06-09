@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import firebase from '../services/firebase';
-import UploadImagem from '../models/uploadImagens';
+import UploadImagem from '../models/uploadImagensModel';
 
 const db = firebase.firestore();
 

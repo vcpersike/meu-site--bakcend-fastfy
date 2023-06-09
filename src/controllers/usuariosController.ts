@@ -1,6 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import Usuario from '../models/usuarioModel';
 import firebase from '../services/firebase';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import { JwtPayload } from 'jsonwebtoken';
 
 const db = firebase.firestore();
 
@@ -18,12 +21,60 @@ async function verificarECriarColecaoUsuarios() {
   }
 }
 
+async function verificarUsuario(request: FastifyRequest, reply: FastifyReply) {
+  try {
+    const { email, senha } = request.body as { email: string, senha: string };
+
+    // Verificar se o usuário existe no banco de dados
+    const snapshot = await db.collection('usuarios').where('email', '==', email).get();
+
+    if (snapshot.empty) {
+      reply.code(401).send('Usuário não encontrado ou senha inválida.');
+      return;
+    }
+
+    const usuario = snapshot.docs[0].data();
+    const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
+
+    if (!senhaCorreta) {
+      reply.code(401).send('Usuário não encontrado ou senha inválida.');
+      return;
+    }
+
+    // Se a senha estiver correta, criar e retornar um token de acesso personalizado
+    const token = criarTokenDeAcesso(snapshot.docs[0].id);
+
+    reply.code(200).send({ token });
+  } catch (error) {
+    console.error('Erro ao verificar o usuário:', error);
+    reply.code(500).send('Erro ao verificar o usuário.');
+  }
+}
+
+
+function criarTokenDeAcesso(userId: string): string {
+  // Defina as informações do payload do token
+  const payload: JwtPayload = {
+    sub: userId, // ID do usuário
+    iat: Math.floor(Date.now() / 1000), // Timestamp de emissão do token
+    // Outras informações do usuário, se necessário
+  };
+
+  // Defina a chave secreta para assinar o token
+  const secretKey = 'minha-chave-secreta';
+
+  // Gere o token JWT
+  const token = jwt.sign(payload, secretKey);
+
+  return token;
+}
+
 async function criarUsuario(request: FastifyRequest, reply: FastifyReply) {
   try {
     await verificarECriarColecaoUsuarios();
 
-    const { nome, email, senha } = request.body as Usuario;
-    const novoUsuario: Omit<Usuario, 'id'> = { nome, email, senha };
+    const { nome, email, senha, celular } = request.body as Usuario;
+    const novoUsuario: Omit<Usuario, 'id'> = { nome, email, senha, celular };
 
     const customId = generateCustomId();
     const docRef = db.collection('usuarios').doc(customId);
@@ -80,5 +131,6 @@ export default {
   criarUsuario,
   excluirUsuario,
   atualizarUsuario,
-  listarUsuarios
+  listarUsuarios,
+  verificarUsuario
 };
