@@ -4,8 +4,9 @@ import usuariosRoutes from './routes/usuarios';
 import uploadAudioroutes from './routes/uploudAudio';
 import imagensRoutes from './routes/imagens';
 import simplesRoutes from './routes/rotasSimples';
+import dotenv from 'dotenv';
 
-
+dotenv.config();
 export const app: FastifyInstance = fastify();
 
 app.register(cors, {
