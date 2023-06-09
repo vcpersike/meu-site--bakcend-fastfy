@@ -4,8 +4,24 @@ import UploadAudio from '../models/uploadAudioModel';
 
 const db = firebase.firestore();
 
+function generateCustomId(): string {
+  const firebaseId = db.collection('audio').doc().id;
+  return `A${firebaseId}DIO`;
+}
+
+async function verificarECriarColecaoAudio() {
+  const collectionRef = db.collection('audio');
+  const collectionSnapshot = await collectionRef.limit(1).get();
+
+  if (collectionSnapshot.empty) {
+    await collectionRef.doc().set({});
+  }
+}
+
 async function createDocument(request: FastifyRequest, reply: FastifyReply) {
   try {
+    await verificarECriarColecaoAudio();
+    await generateCustomId();
     const { nome, caminho, tipo, tamanho, dataCriacao } = request.body as UploadAudio;
     const docRef = await db.collection('uploadAudio').add({
       nome,

@@ -21,7 +21,7 @@ async function verificarECriarColecaoUsuarios() {
   }
 }
 
-async function verificarUsuario(request: FastifyRequest, reply: FastifyReply) {
+async function login(request: FastifyRequest, reply: FastifyReply) {
   try {
     const { email, senha } = request.body as { email: string, senha: string };
 
@@ -51,7 +51,6 @@ async function verificarUsuario(request: FastifyRequest, reply: FastifyReply) {
   }
 }
 
-
 function criarTokenDeAcesso(userId: string): string {
   // Defina as informações do payload do token
   const payload: JwtPayload = {
@@ -61,7 +60,7 @@ function criarTokenDeAcesso(userId: string): string {
   };
 
   // Defina a chave secreta para assinar o token
-  const secretKey = 'minha-chave-secreta';
+  const secretKey = process.env.JWT_SECRET_KEY as string;
 
   // Gere o token JWT
   const token = jwt.sign(payload, secretKey);
@@ -71,6 +70,8 @@ function criarTokenDeAcesso(userId: string): string {
 
 async function criarUsuario(request: FastifyRequest, reply: FastifyReply) {
   try {
+    console.log(request.body); // Verificar o conteúdo do objeto request.body
+
     await verificarECriarColecaoUsuarios();
 
     const { nome, email, senha, celular } = request.body as Usuario;
@@ -120,9 +121,9 @@ async function listarUsuarios(_: FastifyRequest, reply: FastifyReply) {
     usuariosSnapshot.forEach((doc) => {
       usuarios.push({ id: doc.id, ...doc.data() } as Usuario);
     });
+
     reply.send({ usuarios });
   } catch (error) {
-    console.log(error)
     reply.code(500).send({ error: 'Erro ao listar usuários' });
   }
 }
@@ -132,5 +133,5 @@ export default {
   excluirUsuario,
   atualizarUsuario,
   listarUsuarios,
-  verificarUsuario
+  login
 };

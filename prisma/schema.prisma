@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "sqlitecloud://admin:vxATGDytE2@ce7amnvtp.sqlite.cloud:8860/meu-curriculo"
+  url      = "file:./dev.db"
 }
 
 model Audio {

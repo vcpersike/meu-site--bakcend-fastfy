@@ -7,7 +7,7 @@ const usuariosRoutes: FastifyPluginCallback = (fastify, _, done) => {
   fastify.delete('/usuarios/:id', usuariosController.excluirUsuario);
   fastify.put('/usuarios/:id', usuariosController.atualizarUsuario);
   fastify.get('/usuarios', usuariosController.listarUsuarios);
-  fastify.get('/usuarios', usuariosController.verificarUsuario);
+  fastify.get('/usuario', usuariosController.login);
   done();
 }
 

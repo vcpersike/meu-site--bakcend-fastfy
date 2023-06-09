@@ -4,8 +4,24 @@ import UploadImagem from '../models/uploadImagensModel';
 
 const db = firebase.firestore();
 
+function generateCustomId(): string {
+  const firebaseId = db.collection('imagens').doc().id;
+  return `I${firebaseId}ENS`;
+}
+
+async function verificarECriarColecaoImagens() {
+  const collectionRef = db.collection('imagens');
+  const collectionSnapshot = await collectionRef.limit(1).get();
+
+  if (collectionSnapshot.empty) {
+    await collectionRef.doc().set({});
+  }
+}
+
 async function criarImagem(request: FastifyRequest, reply: FastifyReply) {
   try {
+    await verificarECriarColecaoImagens();
+    await generateCustomId();
     const imagem: UploadImagem = request.body as UploadImagem;
     const id = db.collection('uploadImagens').doc().id;
     await db.collection('uploadImagens').doc(id).set(imagem);
