@@ -15,17 +15,15 @@
       ]
     },
     {
-      "source": "login",
-      "codebase": "login",
+      "source": "meu-site",
+      "codebase": "meu-site",
       "ignore": [
         "node_modules",
         ".git",
         "firebase-debug.log",
         "firebase-debug.*.log"
       ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run build"
-      ]
+      "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run build"]
     }
   ]
 }
