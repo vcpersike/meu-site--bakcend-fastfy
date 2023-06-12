@@ -1,4 +1,7 @@
+//import {onRequest} from "firebase-functions/v2/https";
+//import * as logger from "firebase-functions/logger";
 import fastify, { FastifyInstance } from 'fastify';
+import fastifyMultipart from 'fastify-multipart';
 import cors from '@fastify/cors';
 import usuariosRoutes from './routes/usuarios';
 import uploadAudioroutes from './routes/uploudAudio';
@@ -19,6 +22,9 @@ app.register(usuariosRoutes);
 app.register(uploadAudioroutes);
 app.register(imagensRoutes);
 app.register(simplesRoutes);
+app.register(fastifyMultipart, {
+  addToBody: true,
+});
 
 app.listen({
   port: 6001,

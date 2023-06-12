@@ -18,13 +18,24 @@ async function verificarECriarColecaoImagens() {
   }
 }
 
-async function criarImagem(request: FastifyRequest, reply: FastifyReply) {
+async function criarImagem(request, reply) {
   try {
     await verificarECriarColecaoImagens();
     await generateCustomId();
-    const imagem: UploadImagem = request.body as UploadImagem;
+
+    const data = await request.file(); // Acessa o arquivo enviado
+
+    // Exemplo de como você pode armazenar o arquivo em disco
+    const filename = `/uploads-img${data.filename}`;
+    await data.toFile(filename);
+
+    const imagem = {
+      filename,
+    };
+
     const id = db.collection('uploadImagens').doc().id;
     await db.collection('uploadImagens').doc(id).set(imagem);
+
     reply.code(201).send({ id });
   } catch (error) {
     console.error('Erro ao criar a imagem:', error);
