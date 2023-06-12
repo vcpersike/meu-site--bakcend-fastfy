@@ -15,8 +15,8 @@
       ]
     },
     {
-      "source": "meu-site",
-      "codebase": "meu-site",
+      "source": "src",
+      "codebase": "default",
       "ignore": [
         "node_modules",
         ".git",
